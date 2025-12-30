@@ -43,7 +43,6 @@
             undefinedHTML: '&nbsp;'
         });
         var map = new ol.Map({
-            controls: ol.control.defaults.defaults().extend([mousePositionControl]),
             target: 'map',
             layers: [
                 new ol.layer.Group({
@@ -75,6 +74,13 @@
                 center: [8192.000000, -3862.000000],
                 resolution: 64.000000,
             })
+        });
+
+        map.getInteractions().forEach(interaction => {
+        if (interaction instanceof ol.interaction.DragRotate ||
+            interaction instanceof ol.interaction.PinchRotate) {
+            map.removeInteraction(interaction);
+        }
         });
 
         var infoConfig = null
