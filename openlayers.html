@@ -24,6 +24,21 @@
             font-size: 13px;
             z-index: 1000;
         }
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 600px) {
+            #header {
+                display: none;
+            }   
+        }
+        /* Medium devices (landscape tablets, 768px and up) */
+        @media only screen and (min-width: 768px) {
+            #header {
+                display: none;
+            }   
+        }
+        /* Extra large devices (large laptops and desktops, 1200px and up) */
+        @media only screen and (min-width: 1200px) {}
+
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.js"></script>
@@ -72,7 +87,7 @@
             ],
             view: new ol.View({
                 center: [8192.000000, -3862.000000],
-                resolution: 64.000000,
+                resolution: 16.000000,
             })
         });
 
