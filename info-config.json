@@ -2,18 +2,23 @@
   "items": [
     {
       "id": "overview",
-      "zoom": { "min": 10, "max": 12 },
+      "zoom": { "min": 1, "max": 4 },
       "text": "Overzicht van het geheel"
     },
     {
       "id": "structure",
-      "zoom": { "min": 13, "max": 14 },
+      "zoom": { "min": 4, "max": 5 },
       "text": "Nu zie je de hoofdstructuur"
     },
     {
       "id": "detail-a",
-      "zoom": { "min": 15, "max": 18 },
-      "extent": [4898.798712893051,-5503.365641454484, 4898.798712893051,-5403.365641454484],
+      "zoom": { "min": 5, "max": 6 },
+      "extent": [
+        4897.798712893051,
+        -5202.365641454484,
+        4898.798712893051,
+        -5203.365641454484
+      ],  
       "title": "Ornament 1",
       "text": "Rembrandt met cowboyhoed?"
     }

@@ -56,6 +56,17 @@
     <div id="info" class="info-box"></div>
     <div id="mouse-position"></div>
     <script type="text/javascript">
+
+        function normalizeExtent(ext) {
+            const [x1, y1, x2, y2] = ext;
+            return [
+                Math.min(x1, x2),
+                Math.min(y1, y2),
+                Math.max(x1, x2),
+                Math.max(y1, y2)
+            ];
+        }
+
         var mousePositionControl = new ol.control.MousePosition({
             className: 'custom-mouse-position',
             target: document.getElementById('mouse-position'),
@@ -151,14 +162,12 @@
                 return true;
             });
 
-            // extent check (optioneel)
-            const rectangle = ol.geom.Polygon.fromExtent(match && match.extent? match.extent : [0,0,0,0]);
+            const rectangle = ol.geom.Polygon.fromExtent(match && match.extent? normalizeExtent(match.extent) : [0,0,0,0]);
 
             const feature = new ol.Feature({
                 geometry: rectangle
             });
 
-            // toevoegen
             vectorSource.addFeature(feature);
 
             if (!match) {
@@ -168,8 +177,7 @@
 
             infoDiv.innerHTML = `
                 ${match.title ? `<h4>${match.title}</h4>` : ""}
-                <p>${match.extent? match.extent : match.text}</p>
-        `;
+                <p>${match.text}</p>`;
         }
 
         // update bij zoomen
