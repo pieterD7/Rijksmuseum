@@ -17,7 +17,7 @@
             left: 10px;
             background: white;
             padding: 10px 12px; 
-            width: calc(100vw - 40px);
+            width: calc(100vw - 43px);
             border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             font-family: Arial, sans-serif;
@@ -62,6 +62,7 @@
             undefinedHTML: '&nbsp;'
         });
         var map = new ol.Map({
+            controls: ol.control.defaults.defaults().extend([mousePositionControl]),
             target: 'map',
             layers: [
                 new ol.layer.Group({
@@ -90,8 +91,10 @@
                 }),
             ],
             view: new ol.View({
-                center: [8192.000000, -3862.000000],
-                resolution: 16.000000,
+                center: [8192, -3862],
+                zoom: 1,
+                resolutions: [64,32,16,8,4,2,1],
+                extent: [0,-7724,16384,0]
             })
         });
 
@@ -110,6 +113,20 @@
             updateInfo();
         });
 
+        const vectorSource = new ol.source.Vector();
+
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: '#ff0000',
+                    width: 2
+                }),
+                fill: null
+            })
+        });
+
+        map.addLayer(vectorLayer);
 
         const infoDiv = document.getElementById('info');
 
@@ -126,13 +143,23 @@
                 // zoom check
                 if (zoom < item.zoom.min || zoom > item.zoom.max) return false;
 
-                // extent check (optioneel)
+
                 if (item.extent) {
                     return ol.extent.intersects(item.extent, viewExtent);
                 }
 
                 return true;
             });
+
+            // extent check (optioneel)
+            const rectangle = ol.geom.Polygon.fromExtent(match && match.extent? match.extent : [0,0,0,0]);
+
+            const feature = new ol.Feature({
+                geometry: rectangle
+            });
+
+            // toevoegen
+            vectorSource.addFeature(feature);
 
             if (!match) {
                 infoDiv.innerHTML = "";
@@ -141,8 +168,8 @@
 
             infoDiv.innerHTML = `
                 ${match.title ? `<h4>${match.title}</h4>` : ""}
-                <p>${match.text}</p>
-            `;
+                <p>${match.extent? match.extent : match.text}</p>
+        `;
         }
 
         // update bij zoomen
