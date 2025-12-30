@@ -128,6 +128,7 @@
 
         const vectorLayer = new ol.layer.Vector({
             source: vectorSource,
+            geometryFunction: ol.interaction.Draw.createBox(),
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
                     color: '#ff0000',
@@ -136,8 +137,6 @@
                 fill: null
             })
         });
-
-        map.addLayer(vectorLayer);
 
         const infoDiv = document.getElementById('info');
 
@@ -180,12 +179,34 @@
                 <p>${match.text}</p>`;
         }
 
+        map.addLayer(vectorLayer);
+
+        const draw = new ol.interaction.Draw({
+            source: vectorSource,
+            type: 'Circle',
+            geometryFunction: ol.interaction.Draw.createBox()
+        });
+
+        map.addInteraction(draw);
+
+
         // update bij zoomen
         map.getView().on('change:resolution', updateInfo);
         map.on('moveend', updateInfo);
         
         // initieel
         updateInfo();
+
+        draw.on('drawend', function (event) {
+            const feature = event.feature;
+            const geometry = feature.getGeometry();
+
+            // extent = [minX, minY, maxX, maxY] in kaartcoördinaten
+            const extent = geometry.getExtent();
+
+            console.log('Extent:', extent);
+        });
+
     </script>
 </body>
 </html>
