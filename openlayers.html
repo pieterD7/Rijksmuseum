@@ -140,16 +140,59 @@
 
         const infoDiv = document.getElementById('info');
 
+        function extentCenter(ext) {
+            return [
+                (ext[0] + ext[2]) / 2,
+                (ext[1] + ext[3]) / 2
+            ];
+        }
+
+        function closestPointOnExtent(ext, point) {
+            const [x, y] = point;
+
+            return [
+                Math.min(Math.max(x, ext[0]), ext[2]),
+                Math.min(Math.max(y, ext[1]), ext[3])
+            ];
+        }
+
+        function distanceSq(a, b) {
+            const dx = a[0] - b[0];
+            const dy = a[1] - b[1];
+            return dx * dx + dy * dy;
+        }
+        function findNearestExtent(items, mapCenter) {
+            let bestItem = null;
+            let bestDistance = Infinity;
+
+            items.forEach(item => {
+                if (!item.extent) return;
+
+                const ext = normalizeExtent(item.extent);
+
+                const closest = closestPointOnExtent(ext, mapCenter);
+                const d = distanceSq(mapCenter, closest);
+
+                if (d < bestDistance) {
+                bestDistance = d;
+                bestItem = item;
+                }
+            });
+
+            return bestItem;
+        }
+
+
         function updateInfo() {
             if (!infoConfig) return;
 
             const zoom = Math.round(map.getView().getZoom());
             const viewExtent = map.getView().calculateExtent();
 
-            console.log('Zoom:', zoom);
-            console.log('View extent:', viewExtent);
+            // console.log('Zoom:', zoom);
+            // console.log('View extent:', viewExtent);
 
-            const match = infoConfig.items.find(item => {
+            const matches = infoConfig.items.filter(item => {
                 // zoom check
                 if (zoom < item.zoom.min || zoom > item.zoom.max) return false;
 
@@ -161,22 +204,29 @@
                 return true;
             });
 
-            const rectangle = ol.geom.Polygon.fromExtent(match && match.extent? normalizeExtent(match.extent) : [0,0,0,0]);
+            if(matches){
+                const center = map.getView().getCenter();
+                let match = findNearestExtent(matches, center);
+                if(match && match.extent){
+                    const rectangle = ol.geom.Polygon.fromExtent(normalizeExtent(match.extent));
 
-            const feature = new ol.Feature({
-                geometry: rectangle
-            });
+                    const feature = new ol.Feature({
+                        geometry: rectangle
+                    });
+                    vectorSource.clear();
+                    
+                    vectorSource.addFeature(feature);
 
-            vectorSource.addFeature(feature);
+                infoDiv.innerHTML = `
+                    ${match.title ? `<h4>${match.title}</h4>` : ""}
+                    <p>${match.text}</p>`;
+                }
 
-            if (!match) {
+            }
+            else{
                 infoDiv.innerHTML = "";
                 return;
             }
-
-            infoDiv.innerHTML = `
-                ${match.title ? `<h4>${match.title}</h4>` : ""}
-                <p>${match.text}</p>`;
         }
 
         map.addLayer(vectorLayer);

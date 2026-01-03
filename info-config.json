@@ -11,7 +11,7 @@
       "text": "Nu zie je de hoofdstructuur"
     },
     {
-      "id": "detail-a",
+      "id": "detail-001",
       "zoom": { "min": 5, "max": 6 },
       "extent": [
         5065.557466770914, 
@@ -19,8 +19,20 @@
         5506.627052384675,
         -4812.659890539484
       ],  
-      "title": "Ornament 1",
+      "title": "Ornament",
       "text": "Rembrandt met cowboyhoed?"
+    },
+    {
+      "id": "detail-002",
+      "zoom": { "min": 5, "max": 6 },
+      "extent": [
+        7945.9852764077805,
+        -3809.9455069065207,
+        8419.5015375251,
+        -3390.8279303517093
+        ],  
+      "title": "Wapen van Nederland",
+      "text": "Ik zal handhaven."
     }
   ]
 }
