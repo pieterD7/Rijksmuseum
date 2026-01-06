@@ -10,19 +10,13 @@
         h1 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
         #header { height: 43px; padding: 0; background-color: #eee; border: 1px solid #888; }
         #subheader { height: 12px; text-align: right; font-size: 10px; color: #555;}
-        #map { position: relative; height: 100%; border: 1px solid #888; }
+        #map { overflow: visible; position: relative; height: 100%; border: 1px solid #888; }
         .info-box {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: white;
-            padding: 10px 12px; 
-            width: calc(100vw - 43px);
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            z-index: 1000;
+            border: 1pxx solid #888;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            width: fit-content;
+            max-width: 50%;        
         }
         /* Small devices (portrait tablets and large phones, 600px and up) */
         @media only screen and (min-width: 600px) {
@@ -233,17 +227,19 @@
                         geometry: rectangle
                     });
                     vectorSource.clear();
-
-                    console.log(rectangle)
                     
                     vectorSource.addFeature(feature);
 
-                    const pixel = map.getPixelFromCoordinate(rectangle.getCoordinates()[0][0]);
+                    const infoOverlay = new ol.Overlay({
+                        element: document.querySelector('.info-box'),
+                        positioning: 'top-left',
+                        offset: [0, 0],
+                        stopEvent: false
+                    });
+                    map.addOverlay(infoOverlay);
 
-                    const infoElement = document.querySelector('.info-box');
-                    infoElement.style.left = (pixel[0] + 10) + 'px';
-                    infoElement.style.top = (pixel[1] + 40) + 'px';
-
+                    const coord = rectangle.getCoordinates()[0][0];
+                    infoOverlay.setPosition(coord);
 
                 infoDiv.innerHTML = `
                     ${match.title ? `<h4>${match.title}</h4>` : ""}
@@ -284,6 +280,8 @@
 
             console.log('Extent:', extent);
         });
+
+        document.addEventListener('fullscreenchange', updateInfo);
 
     </script>
 </body>
