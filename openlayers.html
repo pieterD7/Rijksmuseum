@@ -4,8 +4,9 @@
     <title>Voorzijde.png</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta http-equiv='imagetoolbar' content='no'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css"> v\:* {behavior:url(#default#VML);}
-        html, body { overflow: hidden; padding: 0; height: 100%; width: 100%; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
+        html, body { overflow: hidden; padding: 0; height: 100%; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
         body { margin: 10px; background: #fff; }
         h1 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
         #header { height: 43px; padding: 0; background-color: #eee; border: 1px solid #888; }
@@ -50,25 +51,25 @@
     <div id="info" class="info-box"></div>
     <script type="text/javascript">
 
-    function coordinateToPixel(coord, view, mapSize) {
-        const resolution = view.getResolution();
-        const center = view.getCenter();
+        function coordinateToPixel(coord, view, mapSize) {
+            const resolution = view.getResolution();
+            const center = view.getCenter();
 
-        return [
-            (coord[0] - center[0]) / resolution + mapSize[0] / 2,
-            (center[1] - coord[1]) / resolution + mapSize[1] / 2
-        ];
-    }
+            return [
+                (coord[0] - center[0]) / resolution + mapSize[0] / 2,
+                (center[1] - coord[1]) / resolution + mapSize[1] / 2
+            ];
+        }
 
-    function openFullscreen() {
-        const elem = document.getElementById("map");
+        function openFullscreen() {
+            const elem = document.getElementById("map");
 
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { // Safari
-            elem.webkitRequestFullscreen();
-        } 
-    }
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { // Safari
+                elem.webkitRequestFullscreen();
+            } 
+        }
         function normalizeExtent(ext) {
             const [x1, y1, x2, y2] = ext;
             return [
@@ -261,7 +262,7 @@
             geometryFunction: ol.interaction.Draw.createBox()
         });
 
-        map.addInteraction(draw);
+        //map.addInteraction(draw);
 
 
         // update bij zoomen
