@@ -8,33 +8,36 @@
     <style type="text/css">
         html, body { overflow: hidden; padding: 0; height: 100%; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
         body { margin: 10px; background: #fff; }
-        h1 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
+        h1, h4 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
         #header { height: 43px; padding: 0; background-color: #eee; border: 1px solid #888; }
         #subheader { height: 12px; text-align: right; font-size: 10px; color: #555;}
         #map { overflow: visible; position: relative; height: 100%; border: 1px solid #888; }
         .info-box {
+            pointer-events: none;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;     
         }
-        /* Small devices (portrait tablets and large phones, 600px and up) */
-        @media only screen and (min-width: 600px) {
+        /* Mobile-first approach */
+        .container {
             #header {
                 display: none;
             }   
         }
-        /* Medium devices (landscape tablets, 768px and up) */
-        @media only screen and (min-width: 768px) {
+
+        /* Tablet breakpoint (approx 768px) */
+        @media (min-width: 48em) {
             #header {
                 display: none;
-            }   
+            }
         }
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
-        @media only screen and (min-width: 1200px) {
+
+        /* Desktop breakpoint (approx 1024px) */
+        @media (min-width: 64em) {
             #header {
                 display: block;
             }
             .info-box {
-                max-width: calc(100vw - 72em);  
+                max-width: calc(100vw - 32em);  
             }
         }
 
@@ -100,7 +103,7 @@
                                 tileGrid: new ol.tilegrid.TileGrid({
                                     extent: [0,-7724,16384,0],
                                     origin: [0,-7724],
-                                    resolutions: [64,32,16,8,4,2,1],
+                                    resolutions: [64,32,16,8,4,2,1,0.5],
                                     tileSize: [256, 256]
                                 }),
                                 tileUrlFunction: function(tileCoord) {
@@ -118,7 +121,7 @@
                 center: [8192, -3862],
                 zoom: 1,
                 constrainResolution: true,
-                resolutions: [64,32,16,8,4,2,1],
+                resolutions: [64,32,16,8,4,2,1,0.5],
                 extent: [0,-7724,16384,0]
             })
         });
@@ -161,6 +164,44 @@
             ];
         }
 
+        function extentMidpoint(ext) {
+            return [
+                (ext[0] + ext[2]) / 2,
+                (ext[1] + ext[3]) / 2
+            ];
+        }
+
+        function closestMidpointOnExtent(ext, point) {
+            const [minX, minY, maxX, maxY] = ext;
+            const [px, py] = point;
+
+            // 1️⃣ punt ligt binnen extent → midden extent
+            if (
+                px >= minX && px <= maxX &&
+                py >= minY && py <= maxY
+            ) {
+                return extentMidpoint(ext);
+            }
+
+            // 2️⃣ bepaal dichtstbijzijnde zijde
+            const dx = px < minX ? minX - px : px > maxX ? px - maxX : 0;
+            const dy = py < minY ? minY - py : py > maxY ? py - maxY : 0;
+
+            // horizontaal verder weg → linker/rechter zijde
+            if (dx > dy) {
+                return [
+                px < minX ? minX : maxX,
+                (minY + maxY) / 2
+                ];
+            }
+
+            // verticaal verder weg → boven/onder zijde
+            return [
+                (minX + maxX) / 2,
+                py < minY ? minY : maxY
+            ];
+        }
+
         function closestPointOnExtent(ext, point) {
             const [x, y] = point;
 
@@ -184,12 +225,12 @@
 
                 const ext = normalizeExtent(item.extent);
 
-                const closest = closestPointOnExtent(ext, mapCenter);
+                const closest = closestMidpointOnExtent(ext, mapCenter);
                 const d = distanceSq(mapCenter, closest);
 
                 if (d < bestDistance) {
-                bestDistance = d;
-                bestItem = item;
+                    bestDistance = d;
+                    bestItem = item;
                 }
             });
 
@@ -221,17 +262,20 @@
             if(matches){
                 const center = map.getView().getCenter();
                 let match = findNearestExtent(matches, center);
+
                 if(match && match.extent){
                     const rectangle = ol.geom.Polygon.fromExtent(normalizeExtent(match.extent));
 
                     const feature = new ol.Feature({
                         geometry: rectangle
                     });
-                    vectorSource.clear();
                     
+                    vectorSource.clear();
                     vectorSource.addFeature(feature);
-
+                    
                     const infoOverlay = new ol.Overlay({
+                        autoPan: true,
+                        stopEvent: false,
                         element: document.querySelector('.info-box'),
                         positioning: 'top-left',
                         offset: [0, 0],
@@ -240,10 +284,11 @@
 
                     const coord = rectangle.getCoordinates()[0][0];
                     infoOverlay.setPosition(coord);
+                    //infoOverlay.panIntoView();
 
-                infoDiv.innerHTML = `
-                    ${match.title ? `<h4>${match.title}</h4>` : ""}
-                    <p>${match.text}</p>`;
+                    infoDiv.innerHTML = `
+                        ${match.title ? `<h4>${match.title}</h4>` : ""}
+                        <p>${match.text}</p>`;
                 }
 
             }
