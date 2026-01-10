@@ -5,7 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta http-equiv='imagetoolbar' content='no'/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css"> v\:* {behavior:url(#default#VML);}
+    <style type="text/css">
         html, body { overflow: hidden; padding: 0; height: 100%; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
         body { margin: 10px; background: #fff; }
         h1 { margin: 0; padding: 6px; border:0; font-size: 20pt; }
@@ -13,10 +13,8 @@
         #subheader { height: 12px; text-align: right; font-size: 10px; color: #555;}
         #map { overflow: visible; position: relative; height: 100%; border: 1px solid #888; }
         .info-box {
-            border: 1pxx solid #888;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            max-width: calc(100vw - 24em);        
+            padding: 20px;     
         }
         /* Small devices (portrait tablets and large phones, 600px and up) */
         @media only screen and (min-width: 600px) {
@@ -34,6 +32,9 @@
         @media only screen and (min-width: 1200px) {
             #header {
                 display: block;
+            }
+            .info-box {
+                max-width: calc(100vw - 72em);  
             }
         }
 
@@ -234,7 +235,6 @@
                         element: document.querySelector('.info-box'),
                         positioning: 'top-left',
                         offset: [0, 0],
-                        stopEvent: false
                     });
                     map.addOverlay(infoOverlay);
 
