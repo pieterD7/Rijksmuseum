@@ -4,7 +4,7 @@
     <title>Voorzijde.png</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta http-equiv='imagetoolbar' content='no'/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <style type="text/css">
         html, body { overflow: hidden; padding: 0; height: 100%; font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
         body { margin: 10px; background: #fff; }
@@ -15,7 +15,9 @@
         .info-box {
             pointer-events: none;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;     
+            padding: 20px;
+            border: 2px solid #888;
+            border-radius: 8px; 
         }
         /* Mobile-first approach */
         .container {
@@ -128,6 +130,7 @@
 
         map.getInteractions().forEach(interaction => {
         if (interaction instanceof ol.interaction.DragRotate ||
+            interaction instanceof ol.interaction.PinchZoom ||
             interaction instanceof ol.interaction.PinchRotate) {
             map.removeInteraction(interaction);
         }
@@ -148,8 +151,8 @@
             geometryFunction: ol.interaction.Draw.createBox(),
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: '#00ff00',
-                    width: 2
+                    color: '#E0E9F6',
+                    width: 3
                 }),
                 fill: null
             })
@@ -274,7 +277,7 @@
                     vectorSource.addFeature(feature);
                     
                     const infoOverlay = new ol.Overlay({
-                        autoPan: true,
+                        autoPan: false,
                         stopEvent: false,
                         element: document.querySelector('.info-box'),
                         positioning: 'top-left',
@@ -308,6 +311,7 @@
 
         //map.addInteraction(draw);
 
+        map.addControl(new ol.control.ZoomSlider());
 
         // update bij zoomen
         map.getView().on('change:resolution', updateInfo);
