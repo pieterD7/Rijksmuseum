@@ -1,18 +1,8 @@
 {
   "items": [
     {
-      "id": "overview",
-      "zoom": { "min": 1, "max": 4 },
-      "text": "Overzicht van het geheel"
-    },
-    {
-      "id": "structure",
-      "zoom": { "min": 4, "max": 5 },
-      "text": "Nu zie je de hoofdstructuur"
-    },
-    {
       "id": "detail-001",
-      "zoom": { "min": 5, "max": 7 },
+      "zoom": { "min": 5, "max": 6 },
       "extent": [
         5065.557466770914, 
         -5163.508991399531,
@@ -33,6 +23,18 @@
         ],  
       "title": "Wapen van Nederland",
       "text": "Ik houd stand. Dit wapen symboliseert de kracht en veerkracht van Nederland door de eeuwen heen. Het motto 'Ik houd stand' benadrukt onze vastberadenheid om te blijven voortbestaan, ongeacht de uitdagingen die we tegenkomen. Het is een herinnering aan onze geschiedenis van doorzettingsvermogen en onze toewijding aan vrijheid en onafhankelijkheid."
+    },
+    {
+      "id": "detail-003",
+      "zoom": { "min": 5, "max": 7 },
+      "extent": [
+          5226.46875,
+          -4872.421875,
+          5317.21875,
+          -4764.828125
+      ],
+      "title": "Ornament",
+      "text": "Dit is een hoofd van een Indiaan als grapje van Pierre Cuypers met de cowboyhoed hieronder. Het is vanaf de straat niet goed te zien, maar toen ik inzoomde op een foto met een telelens, zag ik dit detail. Het is een leuke toevoeging die de creativiteit en humor van de architect laat zien."
     }
   ]
 }
